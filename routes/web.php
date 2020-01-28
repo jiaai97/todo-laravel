@@ -10,6 +10,10 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::any('products/index', 'ProductController@index');
+Route::get('products/delete/{id}', 'ProductController@destroy');
+Route::post('products/update/{id}', 'ProductController@update');
 Route::resource('products','ProductController');
 
 Route::get('/', function () {

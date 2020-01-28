@@ -20,8 +20,20 @@
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
+                <strong>Price:</strong> RM
+                {{ $product->price }}
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
                 <strong>Details:</strong>
                 {{ $product->detail }}
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+                <strong>Publish:</strong>
+                {{ $product->publish==1 ? 'Yes' : 'No' }}
             </div>
         </div>
     </div>

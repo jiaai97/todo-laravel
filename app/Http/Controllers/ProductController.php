@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
   
 use App\Product;
 use Illuminate\Http\Request;
+use Validator;
   
 class ProductController extends Controller
 {
@@ -12,9 +13,15 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::latest()->paginate(5);
+        $products = Product::latest();
+
+        if ($request->has('search')) {
+            $products->where('name', $request->input('search'));
+        }
+
+        $products = $products->paginate(5);
   
         return view('products.index',compact('products'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
@@ -29,7 +36,14 @@ class ProductController extends Controller
     {
         return view('products.create');
     }
-  
+
+    public function search(Request $request)
+    {
+        $search = $request->get('search');
+        $posts = DB::table('products')->where('name', 'like', '%'.$search.'%')->paginate(5);
+        return view('index', ['posts' => $posts]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -38,13 +52,20 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+
+        $data = $request->all();
+        $v = Validator::make($data, [
             'name' => 'required',
             'detail' => 'required',
         ]);
-  
-        Product::create($request->all());
-   
+
+        if ($v->fails()) {
+            Session::flash('error', 'Validation fails');
+            return back()->withInput($data);
+        }
+
+        Product::create($data);
+
         return redirect()->route('products.index')
                         ->with('success','Product created successfully.');
     }
@@ -78,14 +99,22 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        $request->validate([
+        $data = $request->all();
+        $v = Validator::make($data, [
             'name' => 'required',
             'detail' => 'required',
         ]);
+
+        if ($v->fails()) {
+            Session::flash('error', 'Validation fails');
+            return back()->withInput($data);
+        }
+
+        $product = Product::find($id);
   
-        $product->update($request->all());
+        $product->update($data);
   
         return redirect()->route('products.index')
                         ->with('success','Product updated successfully');
@@ -97,8 +126,9 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
+        $product = Product::find($id);
         $product->delete();
   
         return redirect()->route('products.index')

@@ -24,7 +24,7 @@
 @endif
    
 <form action="{{ route('products.store') }}" method="POST">
-    @csrf
+    <input type="hidden" name="_token" value="{{ csrf_token() }}">
   
      <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -35,10 +35,34 @@
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
+                <strong>Price (RM):</strong>
+                <input type="text" name="price" class="form-control" placeholder="99.90">
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
                 <strong>Detail:</strong>
                 <textarea class="form-control" style="height:150px" name="detail" placeholder="Detail"></textarea>
             </div>
+        </div><div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="form-group">
+                <strong>Publish:</strong>
+                <div class="form-check">
+                        <input class="form-check-input" type="radio" name="publish" value="1" checked>
+                        <label class="form-check-label" for="publish1">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="publish" value="0">
+                        <label class="form-check-label" for="publish2">
+                            No
+                        </label>
+                    </div>
+                </div>
+            </div>
         </div>
+
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
                 <button type="submit" class="btn btn-primary">Submit</button>
         </div>

@@ -23,10 +23,9 @@
         </div>
     @endif
   
-    <form action="{{ route('products.update',$product->id) }}" method="POST">
-        @csrf
-        @method('PUT')
-   
+    <form action="{{ url('products/update/'.$product->id) }}" method="POST">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
          <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
@@ -48,11 +47,21 @@
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                    <strong>Publish:</strong><br>
-                    <input type="radio" name="publish" value="Yes" <?php echo ($product->publish=='Yes')?'checked':''?>>Yes<br>
-                    <input type="radio" name="publish" value="No" <?php echo ($product->publish=='No')?'checked':'' ?>>No
+                    <strong>Publish:</strong>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="publish" value="1" <?php if($product->publish==1) { echo 'checked'; } ?>>
+                        <label class="form-check-label" for="publish1">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="publish" value="0" <?php if($product->publish==0) { echo 'checked'; } ?>>
+                        <label class="form-check-label" for="publish2">
+                            No
+                        </label>
+                    </div>
                 </div>
-            </div>
+           </div>     
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
               <button type="submit" class="btn btn-primary">Submit</button>
             </div>
